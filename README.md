@@ -1,0 +1,2 @@
+# open_sandbox
+Cursor道場用の個人に属するオープンなリポジトリ
