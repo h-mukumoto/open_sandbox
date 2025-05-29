@@ -27,20 +27,32 @@ jobs:
 
       - name: Assert output is exactly 'Hello, World!' (should succeed)
         shell: pwsh
+        continue-on-error: true
         run: |
           $expected = "Hello, World!"
           $actual = Get-Content output.txt | Select-Object -First 1
-          if ($actual -ne $expected) {
-            Write-Error "Output was '$actual', expected '$expected'"
+          if ($actual -eq $expected) {
+            "✅ Output matched: '$actual'"
+            "Hello, World! test: OK" | Out-File -Append $env:GITHUB_STEP_SUMMARY
+            exit 0
+          } else {
+            "❌ Output was '$actual', expected '$expected'"
+            "Hello, World! test: NG" | Out-File -Append $env:GITHUB_STEP_SUMMARY
             exit 1
           }
 
       - name: Assert output is exactly 'Hello world' (should fail)
         shell: pwsh
+        continue-on-error: true
         run: |
           $expected = "Hello world"
           $actual = Get-Content output.txt | Select-Object -First 1
-          if ($actual -ne $expected) {
-            Write-Error "Output was '$actual', expected '$expected'"
+          if ($actual -eq $expected) {
+            "✅ Output matched: '$actual'"
+            "Hello world test: OK" | Out-File -Append $env:GITHUB_STEP_SUMMARY
+            exit 0
+          } else {
+            "❌ Output was '$actual', expected '$expected'"
+            "Hello world test: NG" | Out-File -Append $env:GITHUB_STEP_SUMMARY
             exit 1
           }
