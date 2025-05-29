@@ -21,3 +21,26 @@ jobs:
           dotnet-version: '6.0.x'
       - name: Build
         run: dotnet build ./HelloWorld/HelloWorld.csproj
+
+      - name: Run HelloWorld and save output
+        run: dotnet run --project ./HelloWorld/HelloWorld.csproj > output.txt
+
+      - name: Assert output is exactly 'Hello, World!' (should succeed)
+        shell: pwsh
+        run: |
+          $expected = "Hello, World!"
+          $actual = Get-Content output.txt | Select-Object -First 1
+          if ($actual -ne $expected) {
+            Write-Error "Output was '$actual', expected '$expected'"
+            exit 1
+          }
+
+      - name: Assert output is exactly 'Hello world' (should fail)
+        shell: pwsh
+        run: |
+          $expected = "Hello world"
+          $actual = Get-Content output.txt | Select-Object -First 1
+          if ($actual -ne $expected) {
+            Write-Error "Output was '$actual', expected '$expected'"
+            exit 1
+          }
